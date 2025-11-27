@@ -41,8 +41,16 @@ def get_spectrum_amplitude(complex_tensor):
     Extracts and normalizes magnitude spectrum from complex tensor.
     """
     amplitude = torch.abs(complex_tensor)
-    # Normalize by max value per batch to prevent huge loss values
-    amplitude = amplitude / (amplitude.max() + 1e-8)
-    return amplitude
+    B = amplitude.shape[0]
+    # Flatten spatial dimensions for normalization
+    amp_flat = amplitude.reshape(B, -1)
+    amp_min = amp_flat.min(dim=1, keepdim=True)[0]
+    amp_max = amp_flat.max(dim=1, keepdim=True)[0]
+    amp_normalized = (amp_flat - amp_min) / (amp_max - amp_min + 1e-8)
+    # Reshape back to original shape
+    return amp_normalized.reshape(amplitude.shape)
+
+
+
 
     
