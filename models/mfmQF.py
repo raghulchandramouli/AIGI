@@ -34,19 +34,19 @@ class MFMViT_QF(nn.Module):
         if tokens.dim() == 2:
             raise RuntimeError("Encoder returned pooled o/p (B, D)" \
                                 "Make sure timm model returns token seq.")
-        
         B, T, D = tokens.shape
         self.embed_dim = D
-        self.num_patch = T - 1
+        self.num_patches = T - 1
 
-        if int(self.num_patch**0.5)**2 != self.num_patch:
+        if int(self.num_patches**0.5)**2 != self.num_patches:
             raise RuntimeError("Number of patches should be a perfect square.")
-        
+
         self.patches_per_side = int(self.num_patches ** 0.5)
         self.patch_size = self.img_size // self.patches_per_side
-        self.patch_dim = 3 * self.patch_size * self.patch_size     
+        self.patch_dim = 3 * self.patch_size * self.patch_size
+  
 
-# PHASE 2: QF modulation layers (alpha and beta)
+        # PHASE 2: QF modulation layers (alpha and beta)
         if self.use_qf:
             self.qf_alpha = nn.Linear(self.qf_dim, self.embed_dim).to(x.device)
             self.qf_beta = nn.Linear(self.qf_dim, self.embed_dim).to(x.device)

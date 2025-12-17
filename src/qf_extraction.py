@@ -40,7 +40,7 @@ class FBCNN_QF(nn.Module):
         self.qf_pred = nn.Sequential(
             nn.AdaptiveAvgPool2d(1),
             nn.Flatten(),
-            nn.Linear(nf * 4, 128),
+            nn.Linear(nf * 8, 128),
             nn.ReLU(inplace=True),
             nn.Dropout(0.1),
             nn.Linear(128, qf_dim)
